@@ -1,6 +1,7 @@
-from torch import nn
 import torch
 import os
+from torch import nn
+
 
 """
 - class extends nn.Module
@@ -52,4 +53,5 @@ class FullConnectedNet(nn.Module):
             x = self.dropout(x)
         # last layer
         x = self.layers[-1](x)
+        return x
 
