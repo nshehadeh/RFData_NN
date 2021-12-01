@@ -11,7 +11,7 @@ from torch import nn
 """
 
 
-class FullConnectedNet(nn.Module):
+class FullyConnectedNet(nn.Module):
     def __init__(self, input_dim, output_dim, layer_width, num_hidden=1,
                  dropout=0, dropout_input=0, starting_weights=None,
                  batch_norm_enable=False):
@@ -36,8 +36,8 @@ class FullConnectedNet(nn.Module):
         self.batch_norm_enable = batch_norm_enable
         if batch_norm_enable:
             self.bn_layers = nn.ModuleList([])
-        for i in range(num_hidden):
-            self.bn_layers.append(nn.BatchNorm1d(layer_width))
+            for i in range(num_hidden):
+                self.bn_layers.append(nn.BatchNorm1d(layer_width))
 
         # initialize weights randomly
         for i in range(len(self.layers)):
