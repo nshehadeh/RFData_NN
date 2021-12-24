@@ -32,20 +32,19 @@ class Trainer:
                 update params"""
         self.model.train()
         total_loss = 0
+        loss = nn.MSELoss()
         for batch_num, data in enumerate(self.loader_train):
-            # FIXME check these
-            print(data.())
-            inputs = data[0]
-            print(inputs.get_shape())
-            targets = data[1]
-            print(targets.get_shape())
+            inputs = data[0].float()
+            targets = data[1].float()
             if self.cuda:
                 inputs = inputs.cuda()
                 targets = targets.cuda()
             self.optimizer.zero_grad()
             outputs = self.model(inputs)
-            loss = nn.MSELoss()
-            total_loss += loss(outputs, targets)
+            curr_loss = loss(outputs, targets)
+            curr_loss.backward()
+            self.optimizer.step()
+            total_loss += curr_loss
         return total_loss / len(self.loader_train)
 
     def compute_loss(self, dat_loader):
@@ -55,8 +54,8 @@ class Trainer:
         )
         total_loss = 0
         for batch_num, data in enumerate(self.loader_train):
-            inputs = data[0]
-            targets = data[0]
+            inputs = data[0].float()
+            targets = data[1].float()
             inputs = inputs.to(device)
             targets = targets.to(device)
 
@@ -74,12 +73,13 @@ class Trainer:
             # iterate SGD
             t0 = time.time()
             loss_train = self.train_epoch()
+            print("Epoch trained")
             loss_train_eval = self.compute_loss(self.loader_train_eval)
             loss_val = self.compute_loss(self.loader_val)
             time_epoch = time.time() - t0
-            self.logger.add_entry({'loss_train': loss_train,
-                                   'loss_train_eval': loss_train_eval,
-                                   'loss_val': loss_val})
+            self.logger.add_entry({'loss_train': loss_train.item(),
+                                   'loss_train_eval': loss_train_eval.item(),
+                                   'loss_val': loss_val.item()})
 
             # save logger info
             if self.save_dir:
@@ -87,15 +87,12 @@ class Trainer:
 
             change_loss_val = ((loss_val - loss_val_best) / loss_val_best) * 100
 
-            # display results print('E: {:} / Train: {:.3e} / Valid: {:.3e} / Diff Valid: {:.2f}% / Diff Valid-Train:
-            # {:.1f}% / Time: {'':.2f}'.format(epoch, loss_train_eval, loss_val, change_loss_val, (loss_val -
+            print("Epoch: " + str(epoch) + "/ Train: " + str(loss_train_eval.item()) + "/ Valid: " + str(loss_val.item()) +
+                  "/ Diff Valid: " + str(change_loss_val.item()) + "/ Diff Valid-Train: " +
+                  str(((loss_val - loss_train_eval)/loss_train_eval * 100).item()) + "/ Time: " + str(time_epoch) + "\n")
 
-            # loss_train_eval) /loss_train_eval * 100, time_epoch))
-            print("Epoch: " + str(epoch) + "/ Train: " + str(loss_train_eval) + "/ Valid: " + str(loss_val) +
-                  "/ Diff Valid: " + str(change_loss_val) + "/ Diff Valid-Train: " +
-                  str((loss_val - loss_train_eval)/loss_train_eval * 100) + "/ Time: " + str(time_epoch) + "\n")
             # if new loss val is less than previous best
-            if change_loss_val < 0:
+            if change_loss_val < -5:
                 num_epochs_in = 0
                 # best_epoch = epoch
                 loss_val_best = loss_val
@@ -106,6 +103,8 @@ class Trainer:
             num_epochs_in += 1
             # patience, break if necessary
             if epoch > self.min_epochs and (epoch > self.max_epochs or num_epochs_in > self.patience):
+                if num_epochs_in > self.patience:
+                    print("Out of patience, breaking")
                 break
 
             epoch += 1

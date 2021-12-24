@@ -20,7 +20,7 @@ class Logger:
         line = [epoch, self.entries[epoch]['loss_train'], self.entries[epoch]['loss_train_eval'],
                 self.entries[epoch]['loss_val']]
         line = [str(item) for item in line]
-        line = ','.join(line)
+        line = ', '.join(line)
         line += '\n'
         f = open(filepath, 'a')
         f.write(line)

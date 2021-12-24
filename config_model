@@ -1,0 +1,46 @@
+---
+# directory to save model
+save_dir: /shouldntmatter
+# option to give batch size
+batch_size: ~
+# specify dropout probability
+dropout_input: 0.0
+# option to specify patience
+patience: 50
+# option to use GPU
+cuda: ~
+# not sure about this one, initial checkpoint for model
+save_initial: ~
+# input dimension for the network
+input_dim: 283
+# output dimension for the network
+output_dim: 283
+# layer width for the network
+layer_width: 100
+# dropout probability for hidden nodes
+dropout: 0.0
+# number of hidden layers
+num_hidden: 20
+# number of samples to use for training
+num_samples_train: ~
+# number of samples to use for validation, set to available if null
+num_samples_val: 1
+# filepath for weight model
+starting_weights: ~
+# loss function
+loss_function: ~
+# maximum number of epochs to train
+max_epochs: 10000
+# minimum number of epochs to train
+min_epochs: 100
+# learning rate
+lr: .001
+# beta1
+beta1: 0.9
+# beta2
+beta2: 0.99
+# weight decay
+weight_decay: 0.00000001
+# data date
+data_date:
+  - 20211216
