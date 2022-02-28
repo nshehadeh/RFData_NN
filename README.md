@@ -32,6 +32,8 @@ I ran five different models toward the end of the semester and acquired some ini
 In the future, I am going to work on hyperparameter tuning and trying other architecutres such as convolutional neural networks. The main hyper parameters I will target are layer width, number of hidden layers, and different loss functions and optimizers.
 ## Collaborators
 Emelina Vienneau
+
 Lab: Dr. Brett Byram
+
 Advisor: Dr. Matthew Berger
 ## License
