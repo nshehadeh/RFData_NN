@@ -37,3 +37,6 @@ Lab: Dr. Brett Byram
 
 Advisor: Dr. Matthew Berger
 ## License
+MIT License
+
+Copyright (c) 2022 Nishan Shehadeh
